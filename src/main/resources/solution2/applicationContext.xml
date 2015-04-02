@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:data-jpa="http://www.springframework.org/schema/data/jpa"
+		xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd
+							http://www.springframework.org/schema/context
+							http://www.springframework.org/schema/context/spring-context.xsd
+							http://www.springframework.org/schema/data/jpa
+							http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+							http://www.springframework.org/schema/jdbc
+							http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+							http://www.springframework.org/schema/aop
+							http://www.springframework.org/schema/aop/spring-aop.xsd
+							http://www.springframework.org/schema/tx
+							http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:annotation-config />
+
+	<data-jpa:repositories base-package="solution2" />
+
+	<bean id="blogService" class="solution2.BlogServiceImpl" />
+
+	<!-- Initialize HSQLDB as embedded database -->
+	<jdbc:embedded-database id="dataSource" type="HSQL">
+  		<jdbc:script location="classpath:hsqldb-schema.sql"/>
+  	</jdbc:embedded-database>
+	
+	<!-- External database access 
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	    When using PostgreSQL: 
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost/blog" />
+
+	    When using MySQL: 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/blog" />
+		
+		When using SQL Server: 
+		<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
+		<property name="url" value="jdbc:jtds:sqlserver://localhost/blog" />
+		
+		<property name="username" value="blog" />
+		<property name="password" value="blog" />
+	</bean>
+-->
+
+	<!-- Set up JPA -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+	</bean>
+
+	<!-- Set up transactions -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<constructor-arg ref="entityManagerFactory" />
+	</bean>
+
+	<!-- XML configuration for container-managed transactions: -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice" pointcut="this(blog.services.BlogService)" />
+	</aop:config>
+
+	<!-- Use @Transactional instead of XML above:
+	<tx:annotation-driven transaction-manager="txManager" />
+	-->
+</beans>
