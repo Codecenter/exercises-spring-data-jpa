@@ -7,16 +7,17 @@
  */
 package exercise2;
 
-import blog.model.BlogPost;
-import blog.services.BlogService;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import blog.model.BlogPost;
+
+import blog.services.BlogService;
+
 public class BlogServiceImpl implements BlogService {
     @Override
-    public List<BlogPost> getBlogPostRepository() {
+    public List<BlogPost> getBlogPosts() {
         return Collections.emptyList();
     }
 

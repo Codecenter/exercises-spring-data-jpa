@@ -9,9 +9,9 @@ package exercise1;
 
 import java.io.IOException;
 
-import blog.ConsoleApplication;
-
 import blog.services.BlogService;
+
+import blog.ui.ConsoleUI;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -19,7 +19,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class BlogConsole {
     public static void main(String[] args) throws IOException {
         BlogService blogService = createBlogService();
-        ConsoleApplication application = new ConsoleApplication(blogService);
+        ConsoleUI application = new ConsoleUI(blogService);
         application.run();
     }
 

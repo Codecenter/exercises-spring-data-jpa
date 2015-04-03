@@ -17,7 +17,7 @@ import blog.model.BlogPost;
 //@Transactional
 public interface BlogService {
     // @Transactional(readOnly = true)
-    List<BlogPost> getBlogPostRepository();
+    List<BlogPost> getBlogPosts();
 
     // @Transactional(readOnly = true)
     List<BlogPost> getBlogPostsByDate(Date beginDate, Date endDate);

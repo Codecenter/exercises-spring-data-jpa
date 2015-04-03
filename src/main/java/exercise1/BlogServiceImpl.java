@@ -17,7 +17,7 @@ import blog.services.BlogService;
 
 public class BlogServiceImpl implements BlogService {
     @Override
-    public List<BlogPost> getBlogPostRepository() {
+    public List<BlogPost> getBlogPosts() {
         return Collections.emptyList();
     }
 
